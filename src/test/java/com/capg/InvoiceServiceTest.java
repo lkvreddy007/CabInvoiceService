@@ -5,12 +5,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class InvoiceServiceTest {
+
 	InvoiceService invoiceService = null;
 	
 	@Before
 	public void setUp() throws Exception {
 		invoiceService = new InvoiceService();
 	}
+	
 	@Test 
 	public void givenDistanceAnd_Time_ShouldReturnTotalFare() {
 		double distance = 2.0;
@@ -46,5 +48,17 @@ public class InvoiceServiceTest {
 		InvoiceSummary summary = invoiceService.getInvoiceSummary(userId);
 		InvoiceSummary expectedInvoiceSummary = new InvoiceSummary(2, 30.0);
 		Assert.assertEquals(expectedInvoiceSummary, summary);
+	}
+	
+	@Test
+	public void givenUserId_ShouldReturnInvoiceBasedOnRideType() {
+		String userId = "a@bc.com";
+		Ride[] rides = { new Ride(2.0, 5),
+				 		 new Ride(0.1,1)
+			   		   };
+		invoiceService.addRides(userId, rides);
+		InvoiceSummary summary = invoiceService.getInvoiceSummaryForPremium(userId);
+		InvoiceSummary expecterInvoiceSummary = new InvoiceSummary(2, 60);
+		Assert.assertEquals(expecterInvoiceSummary, summary);
 	}
 }
